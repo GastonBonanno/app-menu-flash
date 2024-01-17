@@ -1,0 +1,112 @@
+<ion-content color="dark">
+
+  <ion-col>
+    <ion-img [src]="itemSrc" class="logo-img"></ion-img>
+  </ion-col>
+
+    <ion-grid fixed="true">
+
+      <ion-row (keydown.enter)="login()" class="form">
+        <ion-col size="8">
+          <ion-list>
+            <ion-item>
+              <ion-input name="email"
+                         type="text"
+                         placeholder="Email"
+                         [(ngModel)]="loginUser.email"
+                         required="true"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input name="password"
+                         type="password"
+                         placeholder="Contraseña"
+                         [(ngModel)]="loginUser.password"
+                         required="true"></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="buttons">
+        <ion-col>
+          <ion-button (click)="login()" color="warning"
+                      shape="round">
+            Login
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="buttons">
+        <ion-col>
+          <ion-button color="warning"
+                      shape="round"
+                      id="create-user">
+            Registrate
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+  <ion-modal (keydown.enter)="createUser(modal)" id="create-user-modal" #modal trigger="create-user">
+    <ng-template>
+      <div class="wrapper">
+        <h1>Registro</h1>
+
+        <ion-list lines="none">
+
+          <ion-item>
+            <ion-input class= "{{emailError?'error-input':'no-error-input'}}"
+                       name="email"
+                       type="text"
+                       placeholder="Email"
+                       [(ngModel)]="userToCreate.email"
+                       (focusout)="validateEmail()"
+                       required="true"></ion-input>
+
+          </ion-item>
+          <div class="error-text" *ngIf="emailError">{{ emailError }}</div>
+          <ion-item>
+            <ion-input class= "{{passwordError?'error-input':'no-error-input'}}"
+                       name="password"
+                       type="password"
+                       placeholder="Contraseña"
+                       [(ngModel)]="userToCreate.password"
+                       (focusout)="validatePassword()"
+                       required="true"></ion-input>
+          </ion-item>
+          <div class="error-text" *ngIf="passwordError">{{passwordError}}</div>
+          <ion-item>
+            <ion-input class= "{{repeatedPasswordError?'error-input':'no-error-input'}}"
+                       name="repetead-password"
+                       type="password"
+                       placeholder="Repita contraseña"
+                       [(ngModel)]="userToCreate.repeatedPassword"
+                       (focusout)="validateRepeatedPasswordError()"
+                       required="true"></ion-input>
+          </ion-item>
+          <div class="error-text" *ngIf="repeatedPasswordError">{{ repeatedPasswordError }}</div>
+
+        </ion-list>
+
+        <ion-row class="buttons">
+          <ion-col>
+            <ion-button (click)="createUser(modal)"
+                        color="tertiary"
+                        shape="round"
+                        id="create"
+                        disabled="{{!validateErrors()}}">
+              Crear
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+      </div>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
+
+
+<ion-footer>
+</ion-footer>
