@@ -26,6 +26,9 @@ export class HomePage  {
     console.log('Open Profile')
   }
 
+  openMyOrders(){
+    console.log('Open My Orders')
+  }
 
 
 }
