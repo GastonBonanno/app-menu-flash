@@ -1,0 +1,35 @@
+.titulo {
+  font-size: 24px;
+  text-align: center;
+}
+
+.banner {
+  background-image: url("/assets/menuData.png");
+  background-size: inherit;
+  background-position: center;
+  padding: 50px;
+  text-align: center;
+}
+
+ion-accordion-group {
+  display: flex;
+  width: 100%;
+}
+
+.pendiente-style {
+  --background: #EDDA8A;
+}
+
+.finalizado-style {
+  --background: #A0C5AB;
+}
+
+.cancelado-style {
+  --background: #EBABAA;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -15,7 +15,7 @@ export class HomePage  {
   datetime: any;
 
 
-  constructor() {
+  constructor(private navCtrl: NavController) {
   }
 
   readQr(){
@@ -24,10 +24,12 @@ export class HomePage  {
 
   openProfile(){
     console.log('Open Profile')
+    this.navCtrl.navigateRoot('/profile', {animated: true}).then()
   }
 
   openMyOrders(){
     console.log('Open My Orders')
+    this.navCtrl.navigateRoot('/orders', {animated: true}).then()
   }
 
 

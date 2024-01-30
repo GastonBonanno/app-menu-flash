@@ -15,7 +15,17 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home.page').then( m => m.HomePage),
-    // canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
+    canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage),
+    canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
+  },
+  {
+    path: 'orders',
+    loadComponent: () => import('./pages/orders/orders.page').then( m => m.OrdersPage),
+    canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },
   {
     path: '**',
