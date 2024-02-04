@@ -28,6 +28,11 @@ export const routes: Routes = [
     canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },
   {
+    path: 'scanQr',
+    loadComponent: () => import('./pages/qr-scanner/qr-scanner.page').then( m => m.QrScannerPage),
+    canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
+  },
+  {
     path: '**',
     redirectTo: 'page-not-found',
   },

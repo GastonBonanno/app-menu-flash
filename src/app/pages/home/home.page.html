@@ -1,5 +1,5 @@
 
-<ion-content [style.--backgroud]="isScanActive ? ' #00000000' : '#fff'">
+<ion-content>
   <ion-grid class="ion-padding">
     <ion-row class="ion-padding">
       <ion-title class="ion-padding">Bienvenido</ion-title>
@@ -7,14 +7,10 @@
 
   <ion-row class="buttons">
     <ion-col>
-      <ion-button (click)="readQr()" color="warning"
+      <ion-button (click)="openQrScan()" color="warning"
                   shape="round">
         Abrir "Leer QR"
       </ion-button>
-
-        <ion-row >
-          <ion-button expand="full" (click)="stopScanner()" >Cancelar</ion-button>
-        </ion-row>
 
     </ion-col>
   </ion-row>

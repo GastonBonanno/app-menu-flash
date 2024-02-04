@@ -1,47 +1,70 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { AlertController } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
+import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.page.html',
   styleUrls: ['./qr-scanner.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule]
 })
-export class QrScannerPage  {
+export class QrScannerPage implements OnDestroy {
+  result = '';
+  isScanActive : boolean = false;
 
-  constructor() { }
+  constructor(private alertController: AlertController) { }
 
+  async stopScanner(){
+    await BarcodeScanner.stopScan();
+    this.isScanActive = false;
+  }
 
+  async startScanner(){
+    const allowed = await this.checkPermission();
+    if(allowed){
+      this.isScanActive = true;
+      const result = await BarcodeScanner.startScan();
+      if(result.hasContent){
+        this.result = result.content;
+        this.isScanActive = false;
+      }
+    }
+  }
 
-  //
-  // ngOnInit() {
-  //   BarcodeScanner.isSupported().then((result) => {
-  //     this.isSupported = result.supported;
-  //   });
-  // }
-  //
-  // async scan(): Promise<void> {
-  //   const granted = await this.requestPermissions();
-  //   if (!granted) {
-  //     this.presentAlert();
-  //     return;
-  //   }
-  //   const { barcodes } = await BarcodeScanner.scan();
-  //   this.barcodes.push(...barcodes);
-  // }
-  //
-  // async requestPermissions(): Promise<boolean> {
-  //   const { camera } = await BarcodeScanner.requestPermissions();
-  //   return camera === 'granted' || camera === 'limited';
-  // }
-  //
-  // async presentAlert(): Promise<void> {
-  //   const alert = await this.alertController.create({
-  //     header: 'Permission denied',
-  //     message: 'Please grant camera permission to use the barcode scanner.',
-  //     buttons: ['OK'],
-  //   });
-  //   await alert.present();
-  // }
+  async checkPermission(){
+    return new Promise(async (resolve, reject) => {
+      const status = await BarcodeScanner.checkPermission({force: true});
+      if(status.granted){
+        resolve(true);
+      }else if (status.denied){
+        const alert = await this.alertController.create({
+          header: 'No Permission',
+          message: 'Please allow camera access in your settings',
+          buttons: [{
+            text: 'No',
+            role: 'cancel'
+          },
+            {
+              text: 'Open Settings',
+              handler: () => {
+                resolve(false);
+                BarcodeScanner.openAppSettings();
+              }
+            }
+          ]
+        });
+      }else{
+        resolve(false);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    BarcodeScanner.stopScan();
+  }
 
 }
