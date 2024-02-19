@@ -24,15 +24,16 @@ export class QrScannerPage implements OnDestroy {
   }
 
   async startScanner(){
-    const allowed = await this.checkPermission();
-    if(allowed){
+    // const allowed = await this.checkPermission();
+    const status = await BarcodeScanner.checkPermission({force: true})
+    // if(status.granted){
       this.isScanActive = true;
       const result = await BarcodeScanner.startScan();
       if(result.hasContent){
         this.result = result.content;
-        this.isScanActive = false;
       }
-    }
+      this.isScanActive = false;
+    // }
   }
 
   async checkPermission(){

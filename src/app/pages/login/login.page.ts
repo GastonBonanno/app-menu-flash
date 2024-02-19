@@ -45,16 +45,17 @@ export class LoginPage implements OnInit {
   ) {}
 
   login() {
-    this.userService.login(this.loginUser).subscribe({
-      next: (resp: LoginUserResponse) => {
-        this.tokenService.saveToken(resp.token)
-        this.navCtrl.navigateRoot('/home', {animated: true}).then()
-       },
-      error: (err) => {
-        console.log('error: ', err);
-        this.toast.present('bottom', 'Usuario o contraseña incorrectos').then();
-      },
-    });
+    // this.userService.login(this.loginUser).subscribe({
+    //   next: (resp: LoginUserResponse) => {
+    //     this.tokenService.saveToken(resp.token)
+    //     this.navCtrl.navigateRoot('/home', {animated: true}).then()
+    //    },
+    //   error: (err) => {
+    //     console.log('error: ', err);
+    //     this.toast.present('bottom', 'Usuario o contraseña incorrectos').then();
+    //   },
+    // });
+    this.navCtrl.navigateRoot('/home', {animated: true}).then()
   }
 
   async createUser(modal: IonModal) {
