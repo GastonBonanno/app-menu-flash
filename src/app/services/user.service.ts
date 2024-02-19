@@ -10,6 +10,7 @@ import {
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {catchError, map, Observable, tap} from "rxjs";
 import {SecureService} from "../utils/secure.service";
+import {MenuResponse} from "../interfaces/menu.interface";
 
 const URL = environment.url;
 

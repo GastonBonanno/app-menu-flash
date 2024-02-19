@@ -1,0 +1,95 @@
+<!--<ion-header [translucent]="true">-->
+<!--  <ion-toolbar color="dark">-->
+<!--    <ion-buttons>-->
+<!--      <ion-menu-button color="warning" menu="sidebar"></ion-menu-button>-->
+<!--    </ion-buttons>-->
+<!--  </ion-toolbar>-->
+<!--</ion-header>-->
+
+<!--<ion-content class="ion-padding" [fullscreen]="true" color="dark">-->
+<!--  <ion-card-content class="banner">-->
+<!--    <ion-card-subtitle class="subtitle">{{menuResponse.header}}</ion-card-subtitle>-->
+<!--    <ion-card-title class="title">{{menuResponse.title}}</ion-card-title>-->
+<!--    <ion-text class="text">{{menuResponse.description}}</ion-text>-->
+<!--  </ion-card-content>-->
+
+<!--  <ion-list class="contenedor">-->
+<!--    <ion-item-group>-->
+
+<!--      <ion-grid [fixed]="true">-->
+
+
+<!--        <ion-row class="row-category" *ngFor="let category of menuResponse.listCategory">-->
+<!--          <ion-col size="12">-->
+
+<!--            <ion-item-divider color="dark">-->
+<!--              <ion-title class="title-category"> {{category.name}}</ion-title>-->
+
+<!--              <ion-text>posición: {{category.position}}</ion-text>-->
+
+<!--            </ion-item-divider>-->
+<!--          </ion-col>-->
+<!--          <ion-row *ngFor="let item of category.menuItems" class="container">-->
+
+
+<!--            <ion-col size="4">-->
+<!--              <img class="ion-card" src="/assets/comida.jpg"/>-->
+<!--            </ion-col>-->
+<!--            <ion-col size="4" class="left-item-column">-->
+
+
+<!--              <ion-row>-->
+<!--                <ion-card-title>{{item.name}}</ion-card-title>-->
+<!--              </ion-row>-->
+<!--              <ion-row>-->
+<!--                <ion-card-subtitle>{{item.description}}</ion-card-subtitle>-->
+<!--              </ion-row>-->
+<!--              <ion-row>-->
+<!--                <ion-card-subtitle>$ {{item.price}}</ion-card-subtitle>-->
+<!--              </ion-row>-->
+
+<!--            </ion-col>-->
+<!--            <ion-col class="right-item-column">-->
+
+<!--              <ion-row>-->
+<!--                <ion-card-subtitle>Cantidad: {{item.quantity}}</ion-card-subtitle>-->
+<!--              </ion-row>-->
+<!--              <ion-row>-->
+<!--                <ion-text>{{item.active ? 'Habilitado' : 'Deshabilitado'}}</ion-text>-->
+<!--              </ion-row>-->
+<!--              <ion-row>-->
+<!--                <ion-text>posición: {{item.position}}</ion-text>-->
+<!--              </ion-row>-->
+
+<!--              <ion-row>-->
+<!--                <ion-button fill="clear" color="warning" (click)="setUpdateOpenItem(true, item);">Editar</ion-button>-->
+<!--                <ion-button fill="clear" color="danger" (click)="deleteItem(item.id)">Eliminar</ion-button>-->
+<!--              </ion-row>-->
+
+
+<!--            </ion-col>-->
+
+<!--          </ion-row>-->
+<!--          <ion-col class="button-center" size="12">-->
+
+<!--            <ion-button color="warning" (click)="setOpenItem(true, category.id)">-->
+
+<!--              Agregar Producto-->
+<!--              <ion-icon slot="start" name="restaurant-outline"></ion-icon>-->
+<!--            </ion-button>-->
+
+<!--          </ion-col>-->
+<!--        </ion-row>-->
+
+<!--      </ion-grid>-->
+
+<!--    </ion-item-group>-->
+<!--  </ion-list>-->
+
+<!--</ion-content>-->
+
+<!--<ion-footer [translucent]="true" class="ion-no-border ion-text-center">-->
+<!--  <ion-toolbar>-->
+<!--    <ion-title>{{menuResponse.footer}}</ion-title>-->
+<!--  </ion-toolbar>-->
+<!--</ion-footer>-->

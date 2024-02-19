@@ -18,6 +18,11 @@ export const routes: Routes = [
     // canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },
   {
+    path: 'menu',
+    loadComponent: () => import('./pages/menu/menu.page').then( m => m.MenuPage),
+    // canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
+  },
+  {
     path: 'profile',
     loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage),
     // canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]

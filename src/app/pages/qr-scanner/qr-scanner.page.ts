@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
-import { AlertController } from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import {IonicModule} from '@ionic/angular';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -16,7 +16,7 @@ export class QrScannerPage implements OnDestroy {
   result = '';
   isScanActive : boolean = false;
 
-  constructor(private alertController: AlertController) { }
+  constructor(private alertController: AlertController,private navCtrl: NavController) { }
 
   async stopScanner(){
     await BarcodeScanner.stopScan();
@@ -25,14 +25,15 @@ export class QrScannerPage implements OnDestroy {
 
   async startScanner(){
     // const allowed = await this.checkPermission();
-    const status = await BarcodeScanner.checkPermission({force: true})
+    // const status = await BarcodeScanner.checkPermission({force: true})
     // if(status.granted){
-      this.isScanActive = true;
-      const result = await BarcodeScanner.startScan();
-      if(result.hasContent){
-        this.result = result.content;
-      }
-      this.isScanActive = false;
+    //   this.isScanActive = true;
+      // const result = await BarcodeScanner.startScan();
+      // if(result.hasContent){
+        // this.result = result.content;
+        this.navCtrl.navigateRoot('/menu', {animated: true}).then()
+      // }
+      // this.isScanActive = false;
     // }
   }
 
