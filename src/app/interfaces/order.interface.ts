@@ -24,3 +24,10 @@ export interface ClientOrderItemResponse{
   quantity: number;
 }
 
+export interface OrderItem {
+  name: string | undefined;
+  description: string | undefined;
+  price: number | undefined;
+  quantity: number | undefined;
+  additionalComments: string | undefined;
+}

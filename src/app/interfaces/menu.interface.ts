@@ -24,16 +24,17 @@ export interface CategoryResponse{
 }
 
 export interface ItemMenuResponse{
-  id: number;
-  categoryMenuId: number;
-  name: string;
+  id: number | undefined;
+  categoryMenuId: number | undefined;
+  name: string | undefined;
   position: number | undefined;
-  description: string;
-  price: number;
-  active: boolean
-  quantity: number;
+  description: string | undefined;
+  price: number | undefined;
+  active: boolean | undefined
+  quantity: number | undefined;
   createdAt: Date | undefined;
   modifiedAt: Date | undefined;
   deletedAt: Date | undefined;
 }
+
 

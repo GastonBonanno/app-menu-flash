@@ -3,8 +3,9 @@ import {IonicModule, NavController} from "@ionic/angular";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {MenuService} from "../../services/menu.service";
-import {MenuResponse} from "../../interfaces/menu.interface";
+import {ItemMenuResponse, MenuResponse} from "../../interfaces/menu.interface";
 import {Toast} from "../../utils/toast";
+import {OrderItem} from "../../interfaces/order.interface";
 
 @Component({
   selector: 'app-menu',
@@ -30,6 +31,16 @@ export class MenuPage implements OnInit {
     listCategory: []
   };
 
+  orderItem: OrderItem = {
+    name: undefined,
+    description: undefined,
+    price: undefined,
+    quantity: undefined,
+    additionalComments: undefined,
+  }
+  isModalItemOpen: boolean = false
+  orderItemList: OrderItem[] = []
+
   constructor(
     private menuService: MenuService,
     private navCtrl: NavController,
@@ -48,4 +59,48 @@ export class MenuPage implements OnInit {
       }
     })
   }
+
+  addOneOrderQuantity() {
+    if(this.orderItem.quantity! < 25)
+      this.orderItem.quantity = this.orderItem.quantity! + 1
+  }
+  removeOneOrderQuantity() {
+    if(this.orderItem.quantity! > 0)
+      this.orderItem.quantity = this.orderItem.quantity! - 1
+  }
+
+  goToOrderPreview() {
+    this.navCtrl.navigateRoot('/orderPreview', {animated: true}).then()
+  }
+
+
+  setOpenModalItem(isOpen: boolean, item: ItemMenuResponse | undefined) {
+    if(isOpen && item !== undefined) {
+      this.isModalItemOpen = true
+      this.orderItem = {
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        quantity: 1,
+        additionalComments: undefined,
+      }
+    } else {
+      this.isModalItemOpen = false
+    }
+  }
+
+  addItemToOrderList() {
+    this.orderItemList.push(this.orderItem)
+  }
+
+  clearItem() {
+    this.orderItem = {
+      name: undefined,
+      description: undefined,
+      price: undefined,
+      quantity: undefined,
+      additionalComments: undefined,
+    }
+  }
+
 }
