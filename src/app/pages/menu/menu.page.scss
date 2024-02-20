@@ -1,0 +1,9 @@
+.left-item-column {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+ion-row {
+  width: 100%;
+  height: auto; /* Esto mantiene la proporción de la imagen */
+}
