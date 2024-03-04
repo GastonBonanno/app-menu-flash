@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="dark">
     <ion-buttons>
-      <ion-menu-button color="warning" menu="sidebar"></ion-menu-button>
+      <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -27,10 +27,6 @@
 
           <ion-row (click)="setOpenModalItem(true, item)" *ngFor="let item of category.menuItems">
 
-
-<!--            <ion-col size="4">-->
-<!--              <img class="ion-card" src="/assets/comida.jpg"/>-->
-<!--            </ion-col>-->
             <ion-col size="12" class="left-item-column">
               <ion-row>
                 <ion-card-title>{{item.name}}</ion-card-title>
@@ -75,22 +71,62 @@
       </ion-header>
       <ion-content class="ion-padding">
 
-        <ion-text>Nombre: {{orderItem.name}}</ion-text>
-        <ion-text>Descripción: {{orderItem.description}}</ion-text>
-        <ion-text>Precio: {{orderItem.price}}</ion-text>
-        <ion-row>
-          <ion-button (click)="addOneOrderQuantity()"  color="medium" size="small">
-            <ion-icon name="add-outline"></ion-icon>
-          </ion-button>
+        <ion-grid>
+          <ion-col>
 
-          <ion-card-subtitle>Cantidad: {{orderItem.quantity}}</ion-card-subtitle>
+            <ion-row>
+              <ion-item-divider color="dark">
+              <ion-title>Nombre</ion-title>
+              </ion-item-divider>
+              <ion-row style="margin-top: 10px">
+                <ion-text>{{orderItem.name}}</ion-text>
+              </ion-row>
+            </ion-row>
 
-          <ion-button (click)="removeOneOrderQuantity()" color="medium" size="small">
-            <ion-icon name="remove-outline"></ion-icon>
-          </ion-button>
-        </ion-row>
-        <ion-input placeholder="Comentarios adicionales" [(ngModel)]="orderItem.additionalComments"></ion-input>
+            <ion-row style="margin-top: 25px">
+              <ion-item-divider color="dark">
+              <ion-title>Descripción</ion-title>
+              </ion-item-divider>
+              <ion-row style="margin-top: 10px">
+                <ion-text>{{orderItem.description}}</ion-text>
+              </ion-row>
+            </ion-row>
 
+            <ion-row style="margin-top: 25px">
+              <ion-item-divider color="dark">
+              <ion-title>Precio</ion-title>
+              </ion-item-divider>
+              <ion-row style="margin-top: 10px">
+                <ion-text>{{orderItem.price}}</ion-text>
+              </ion-row>
+            </ion-row>
+
+
+            <ion-row style="margin-top: 20px">
+
+              <ion-col>
+                <ion-item-divider color="dark">
+                <ion-text>Cantidad:</ion-text>
+                </ion-item-divider>
+              </ion-col>
+              <ion-col>
+                <ion-button (click)="removeOneOrderQuantity()" color="medium" size="small">
+                  <ion-icon name="remove-outline"></ion-icon>
+                </ion-button>
+                <ion-text>{{orderItem.quantity}}</ion-text>
+                <ion-button (click)="addOneOrderQuantity()"  color="medium" size="small">
+                  <ion-icon name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+
+            <ion-row style="margin-top: 20px">
+              <ion-input placeholder="Comentarios adicionales" [(ngModel)]="orderItem.additionalComments"></ion-input>
+            </ion-row>
+
+
+          </ion-col>
+        </ion-grid>
       </ion-content>
       <ion-footer>
         <ion-toolbar>
@@ -107,7 +143,9 @@
 </ion-content>
 
 <ion-footer [translucent]="true" class="ion-no-border ion-text-center">
-  <ion-toolbar>
-    <ion-title>{{menuResponse.footer}}</ion-title>
-  </ion-toolbar>
+  <ion-button (click)="goToOrderPreview()"
+              color="warning"
+              shape="round">
+    Ver pedido
+  </ion-button>
 </ion-footer>

@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:8081'
-  // url: 'http://ms-menu-flash-env.eba-te23mqbr.us-east-2.elasticbeanstalk.com'
+  // url: 'http://localhost:8081'
+  url: 'https://ms-menu-flash.onrender.com'
 };
 
 /*

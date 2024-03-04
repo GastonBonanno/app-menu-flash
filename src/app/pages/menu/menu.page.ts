@@ -6,6 +6,8 @@ import {MenuService} from "../../services/menu.service";
 import {ItemMenuResponse, MenuResponse} from "../../interfaces/menu.interface";
 import {Toast} from "../../utils/toast";
 import {OrderItem} from "../../interfaces/order.interface";
+import {NavigationExtras, Router} from "@angular/router";
+import {refresh} from "ionicons/icons";
 
 @Component({
   selector: 'app-menu',
@@ -44,6 +46,7 @@ export class MenuPage implements OnInit {
   constructor(
     private menuService: MenuService,
     private navCtrl: NavController,
+    private router: Router,
     private toast: Toast
   ) {}
 
@@ -65,12 +68,18 @@ export class MenuPage implements OnInit {
       this.orderItem.quantity = this.orderItem.quantity! + 1
   }
   removeOneOrderQuantity() {
-    if(this.orderItem.quantity! > 0)
+    if(this.orderItem.quantity! > 1)
       this.orderItem.quantity = this.orderItem.quantity! - 1
   }
 
   goToOrderPreview() {
-    this.navCtrl.navigateRoot('/orderPreview', {animated: true}).then()
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        orderItemList: JSON.stringify(this.orderItemList)
+      }
+    };
+    // this.navCtrl.navigateForward(['/orderPreview'], true, navigationExtras).then()
+    this.router.navigate(['orderPreview'], navigationExtras)
   }
 
 
@@ -91,6 +100,7 @@ export class MenuPage implements OnInit {
 
   addItemToOrderList() {
     this.orderItemList.push(this.orderItem)
+    console.log('orderItemList: ', this.orderItemList)
   }
 
   clearItem() {
