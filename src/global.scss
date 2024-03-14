@@ -55,3 +55,9 @@ ion-header{
   border: 2px solid rgba(169, 169, 169, 0.5);
   outline: none;
 }
+
+//QR Scanner
+body.scanner-active {
+  --background: transparent;
+  --ion-background-color: transparent;
+}

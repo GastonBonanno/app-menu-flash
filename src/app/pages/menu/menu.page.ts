@@ -6,7 +6,7 @@ import {MenuService} from "../../services/menu.service";
 import {ItemMenuResponse, MenuResponse} from "../../interfaces/menu.interface";
 import {Toast} from "../../utils/toast";
 import {OrderItem} from "../../interfaces/order.interface";
-import {NavigationExtras, Router} from "@angular/router";
+import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {refresh} from "ionicons/icons";
 
 @Component({
@@ -42,18 +42,28 @@ export class MenuPage implements OnInit {
   }
   isModalItemOpen: boolean = false
   orderItemList: OrderItem[] = []
+  menuId: number | undefined = undefined
 
   constructor(
     private menuService: MenuService,
     private navCtrl: NavController,
     private router: Router,
-    private toast: Toast
+    private toast: Toast,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log('params1: ', params);
+      if (params) {
+        console.log('params2: ', params);
+        // menuId
+      }
+    })
     this.menuService.getMenuById("1").subscribe({
       next: (resp: MenuResponse) => {
-        this.menuResponse = resp;
+        if(resp !== null)
+          this.menuResponse = resp;
       },
       error: (err) => {
         console.log('No se encontro el menu: ', err);

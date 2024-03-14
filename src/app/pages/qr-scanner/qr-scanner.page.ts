@@ -1,44 +1,64 @@
-import {Component, OnDestroy} from '@angular/core';
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {BarcodeScanner, IScanResultWithContent, IScanResultWithoutContent} from '@capacitor-community/barcode-scanner';
 import {AlertController, NavController} from '@ionic/angular';
 import {IonicModule} from '@ionic/angular';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {Router} from "@angular/router";
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {Toast} from "../../utils/toast";
+import Swiper from "swiper";
 
 @Component({
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.page.html',
   styleUrls: ['./qr-scanner.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
 })
-export class QrScannerPage implements OnDestroy {
-  result = '';
+export class QrScannerPage implements OnDestroy, OnInit {
+
+  @ViewChild('swiper')
+  swiperRef: ElementRef | undefined;
+  swiper?: Swiper
+
+  result: IScanResultWithContent | IScanResultWithoutContent | undefined= undefined;
   isScanActive : boolean = false;
 
-  constructor(private alertController: AlertController,private navCtrl: NavController) { }
+  constructor(private alertController: AlertController,private navCtrl: NavController, private router: Router, private toast: Toast) { }
 
-  async stopScanner(){
-    await BarcodeScanner.stopScan();
-    this.isScanActive = false;
+  async ngOnInit() {
+    await this.startScan()
   }
 
-  async startScanner(){
-    // const allowed = await this.checkPermission();
-    // const status = await BarcodeScanner.checkPermission({force: true})
-    // if(status.granted){
-    //   this.isScanActive = true;
-      // const result = await BarcodeScanner.startScan();
-      // if(result.hasContent){
-        // this.result = result.content;
-        this.navCtrl.navigateRoot('/menu', {animated: true}).then()
-      // }
-      // this.isScanActive = false;
-    // }
+  async startScan() {
+    try {
+      const allowed = await this.checkPermission();
+      if (!allowed) {
+        return
+      }
+      await BarcodeScanner.showBackground()
+      document.querySelector('body')?.classList.add('scanner-active');
+      this.isScanActive = true;
+      // document.body.style.opacity = '0';
+      // document.body.style.background = 'transparent';
+      this.result = await BarcodeScanner.startScan();
+      this.toast.present('bottom', `Result: ${this.result.content}`)
+      if (this.result.hasContent) {
+        document.querySelector('body')?.classList.remove('scanner-active');
+        this.swiper?.slideNext()
+      }
+      this.isScanActive = false;
+    } catch (e) {
+      this.stopScan()
+    }
+
   }
 
   async checkPermission(){
-    return new Promise(async (resolve, reject) => {
+    return await new Promise(async (resolve, reject) => {
       const status = await BarcodeScanner.checkPermission({force: true});
       if(status.granted){
         resolve(true);
@@ -59,14 +79,24 @@ export class QrScannerPage implements OnDestroy {
             }
           ]
         });
+        await alert.present()
       }else{
         resolve(false);
       }
     });
   }
 
-  ngOnDestroy(): void {
-    BarcodeScanner.stopScan();
+  stopScan() {
+    BarcodeScanner.showBackground()
+    BarcodeScanner.stopScan()
+    this.isScanActive = false;
+    document.querySelector('body')?.classList.remove('scanner-active');
+    this.navCtrl.navigateRoot('/home', {animated: true}).then()
   }
 
+  ngOnDestroy(): void {
+    this.stopScan()
+  }
+
+  protected readonly stop = stop;
 }

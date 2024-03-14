@@ -7,17 +7,34 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [style.--backgroud]="isScanActive ? '#00000000' : '#fff'">
-  <ion-button expand="full" (click)="startScanner()" *ngIf="!isScanActive">
-    <ion-icon name="scan" slot="start"></ion-icon>
-    Start Scan
-  </ion-button>
-  <p class="ion-text-center" *ngIf="result && !isScanActive">{{result}}</p>
-  <ion-row class="scanner-buttons" *ngIf="isScanActive">
-    <ion-col class="ion-no-padding">
-      <ion-button expand="full" (click)="stopScanner()">Stop</ion-button>
-    </ion-col>
-  </ion-row>
+<!--<ion-content [style.&#45;&#45;backgroud]="isScanActive ? '#00000000' : '#fff'">-->
+<ion-content class="{{isScanActive ? 'active-camera' : ''}}">
+
+<!--  <ion-button expand="full" (click)="startScanner()" *ngIf="!isScanActive">-->
+<!--    <ion-icon name="scan" slot="start"></ion-icon>-->
+<!--    Start Scan-->
+<!--  </ion-button>-->
+
+  <swiper-container
+    #swiper
+    navigation="true"
+    effect="flip">
+    <swiper-slide>
+<!--      <p class="ion-text-center" *ngIf="result && !isScanActive">{{result}}</p>-->
+<!--      <ion-row class="scanner-buttons" *ngIf="isScanActive">-->
+<!--        <ion-col class="ion-no-padding">-->
+<!--          <ion-button expand="full" (click)="stopScan()">Stop</ion-button>-->
+<!--        </ion-col>-->
+<!--      </ion-row>-->
+      <p class="ion-text-center">Silde1</p>
+    </swiper-slide>
+
+    <swiper-slide>
+      <p class="ion-text-center">Silde2</p>
+    </swiper-slide>
+  </swiper-container>
+
+
 
   <!--  <div class="scan-box" [hidden]="!isScanActive"></div>-->
 </ion-content>
