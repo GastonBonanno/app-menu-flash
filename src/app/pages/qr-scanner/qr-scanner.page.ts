@@ -8,6 +8,8 @@ import {Router} from "@angular/router";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {Toast} from "../../utils/toast";
 import Swiper from "swiper";
+import {register} from "swiper/element/bundle";
+register()
 
 @Component({
   selector: 'app-qr-scanner',
@@ -18,11 +20,18 @@ import Swiper from "swiper";
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 
 })
-export class QrScannerPage implements OnDestroy, OnInit {
+export class QrScannerPage implements OnInit {
 
   @ViewChild('swiper')
   swiperRef: ElementRef | undefined;
-  swiper?: Swiper
+
+  // swiper?: Swiper = new Swiper('.swiper', {
+  //   speed: 400,
+  //   spaceBetween: 100,
+  // });
+
+  // swiperEl = document.querySelector('swiper-container');
+
 
   result: IScanResultWithContent | IScanResultWithoutContent | undefined= undefined;
   isScanActive : boolean = false;
@@ -42,19 +51,18 @@ export class QrScannerPage implements OnDestroy, OnInit {
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      // document.body.style.opacity = '0';
-      // document.body.style.background = 'transparent';
       this.result = await BarcodeScanner.startScan();
       this.toast.present('bottom', `Result: ${this.result.content}`)
       if (this.result.hasContent) {
         document.querySelector('body')?.classList.remove('scanner-active');
-        this.swiper?.slideNext()
       }
       this.isScanActive = false;
     } catch (e) {
+      console.log('Error: ', e)
       this.stopScan()
     }
-
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.slideNext()
   }
 
   async checkPermission(){
@@ -94,9 +102,9 @@ export class QrScannerPage implements OnDestroy, OnInit {
     this.navCtrl.navigateRoot('/home', {animated: true}).then()
   }
 
-  ngOnDestroy(): void {
-    this.stopScan()
-  }
+  // ngOnDestroy(): void {
+  //   this.stopScan()
+  // }
 
   protected readonly stop = stop;
 }
