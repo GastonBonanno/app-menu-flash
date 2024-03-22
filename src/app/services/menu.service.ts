@@ -14,7 +14,7 @@ export class MenuService {
   constructor(private secureService: SecureService) {
   }
 
-  getMenuById(menuId: string | null): Observable<MenuResponse> {
+  getMenuById(menuId: string | undefined): Observable<MenuResponse> {
     return this.secureService.get('/company-menu/' + menuId);
   }
 }

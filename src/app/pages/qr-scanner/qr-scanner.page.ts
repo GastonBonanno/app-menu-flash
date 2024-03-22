@@ -4,11 +4,14 @@ import {AlertController, NavController} from '@ionic/angular';
 import {IonicModule} from '@ionic/angular';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {Router} from "@angular/router";
+import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {Toast} from "../../utils/toast";
 import Swiper from "swiper";
 import {register} from "swiper/element/bundle";
+import {ItemMenuResponse, MenuResponse} from "../../interfaces/menu.interface";
+import {OrderItem} from "../../interfaces/order.interface";
+import {MenuService} from "../../services/menu.service";
 register()
 
 @Component({
@@ -21,22 +24,47 @@ register()
 
 })
 export class QrScannerPage implements OnInit {
-
   @ViewChild('swiper')
   swiperRef: ElementRef | undefined;
 
-  // swiper?: Swiper = new Swiper('.swiper', {
-  //   speed: 400,
-  //   spaceBetween: 100,
-  // });
-
-  // swiperEl = document.querySelector('swiper-container');
-
-
-  result: IScanResultWithContent | IScanResultWithoutContent | undefined= undefined;
+  scanResult: IScanResultWithContent | IScanResultWithoutContent | undefined= undefined;
   isScanActive : boolean = false;
 
-  constructor(private alertController: AlertController,private navCtrl: NavController, private router: Router, private toast: Toast) { }
+  menuResponse: MenuResponse = {
+    id: 0,
+    branch: '',
+    title: '',
+    description: '',
+    header: '',
+    footer: '',
+    companyDataId: 0,
+    active: true,
+    createdAt: null,
+    modifiedAt: null,
+    deletedAt: null,
+    listCategory: []
+  };
+
+  orderItem: OrderItem = {
+    name: undefined,
+    description: undefined,
+    price: undefined,
+    quantity: undefined,
+    additionalComments: undefined,
+  }
+  isModalItemOpen: boolean = false
+  orderItemList: OrderItem[] = []
+  menuId: string | undefined = undefined
+
+
+  constructor(
+    private alertController: AlertController,
+    private navCtrl: NavController,
+    private router: Router,
+    private toast: Toast,
+    private menuService: MenuService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   async ngOnInit() {
     await this.startScan()
@@ -51,9 +79,10 @@ export class QrScannerPage implements OnInit {
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      this.result = await BarcodeScanner.startScan();
-      this.toast.present('bottom', `Result: ${this.result.content}`)
-      if (this.result.hasContent) {
+      this.scanResult = await BarcodeScanner.startScan();
+      // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
+      if (this.scanResult.hasContent) {
+        this.menuId = this.formatResultMenuId(this.scanResult.content)
         document.querySelector('body')?.classList.remove('scanner-active');
       }
       this.isScanActive = false;
@@ -63,7 +92,14 @@ export class QrScannerPage implements OnInit {
     }
     let swiper: Swiper = this.swiperRef?.nativeElement.swiper
     swiper.slideNext()
+    this.findMenu()
   }
+
+  formatResultMenuId(qrResult: string): string {
+    return qrResult.split(',')[0]
+  }
+
+
 
   async checkPermission(){
     return await new Promise(async (resolve, reject) => {
@@ -102,9 +138,70 @@ export class QrScannerPage implements OnInit {
     this.navCtrl.navigateRoot('/home', {animated: true}).then()
   }
 
-  // ngOnDestroy(): void {
-  //   this.stopScan()
-  // }
+
+  addOneOrderQuantity() {
+    if(this.orderItem.quantity! < 25)
+      this.orderItem.quantity = this.orderItem.quantity! + 1
+  }
+  removeOneOrderQuantity() {
+    if(this.orderItem.quantity! > 1)
+      this.orderItem.quantity = this.orderItem.quantity! - 1
+  }
+
+  goToOrderPreview() {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        orderItemList: JSON.stringify(this.orderItemList)
+      }
+    };
+    // this.navCtrl.navigateForward(['/orderPreview'], true, navigationExtras).then()
+    this.router.navigate(['orderPreview'], navigationExtras)
+  }
+
+
+  setOpenModalItem(isOpen: boolean, item: ItemMenuResponse | undefined) {
+    if(isOpen && item !== undefined) {
+      this.isModalItemOpen = true
+      this.orderItem = {
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        quantity: 1,
+        additionalComments: undefined,
+      }
+    } else {
+      this.isModalItemOpen = false
+    }
+  }
+
+  addItemToOrderList() {
+    this.orderItemList.push(this.orderItem)
+    console.log('orderItemList: ', this.orderItemList)
+  }
+
+  clearItem() {
+    this.orderItem = {
+      name: undefined,
+      description: undefined,
+      price: undefined,
+      quantity: undefined,
+      additionalComments: undefined,
+    }
+  }
+
+  findMenu() {
+    this.menuService.getMenuById(this.menuId).subscribe({
+      next: (resp: MenuResponse) => {
+        if(resp !== null)
+          this.menuResponse = resp;
+      },
+      error: (err) => {
+        console.log('No se encontro el menu: ', err);
+        this.toast.present('bottom', 'Menu no encontrado')
+        this.navCtrl.navigateRoot('/home', {animated: true}).then()
+      }
+    })
+  }
 
   protected readonly stop = stop;
 }
