@@ -194,9 +194,14 @@ export class QrScannerPage implements OnInit {
       next: (resp: MenuResponse) => {
         if(resp !== null)
           this.menuResponse = resp;
+        else {
+          console.log('No se encontró el menu');
+          this.toast.present('bottom', 'Menu no encontrado')
+          this.navCtrl.navigateRoot('/home', {animated: true}).then()
+        }
       },
       error: (err) => {
-        console.log('No se encontro el menu: ', err);
+        console.log('No se encontró el menu: ', err);
         this.toast.present('bottom', 'Menu no encontrado')
         this.navCtrl.navigateRoot('/home', {animated: true}).then()
       }
