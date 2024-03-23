@@ -24,3 +24,23 @@
   background: transparent;
   opacity: 0;
 }
+
+.left-item-column {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+ion-row {
+  width: 100%;
+  height: auto;
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.buttons {
+  text-align: center;
+}

@@ -79,19 +79,18 @@ export class QrScannerPage implements OnInit {
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      this.scanResult = await BarcodeScanner.startScan();
+      // this.scanResult = await BarcodeScanner.startScan();
       // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
-      if (this.scanResult.hasContent) {
-        this.menuId = this.formatResultMenuId(this.scanResult.content)
+      // if (this.scanResult.hasContent) {
+        this.menuId = '1'
         document.querySelector('body')?.classList.remove('scanner-active');
-      }
+      // }
       this.isScanActive = false;
     } catch (e) {
       console.log('Error: ', e)
       this.stopScan()
     }
-    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
-    swiper.slideNext()
+    this.goToMenu()
     this.findMenu()
   }
 
@@ -148,14 +147,23 @@ export class QrScannerPage implements OnInit {
       this.orderItem.quantity = this.orderItem.quantity! - 1
   }
 
-  goToOrderPreview() {
-    let navigationExtras: NavigationExtras = {
-      queryParams: {
-        orderItemList: JSON.stringify(this.orderItemList)
-      }
-    };
-    // this.navCtrl.navigateForward(['/orderPreview'], true, navigationExtras).then()
-    this.router.navigate(['orderPreview'], navigationExtras)
+  goToNextSlide() {
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.slideNext()
+  }
+
+  goToMenu() {
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.slideTo(1)
+  }
+
+  goToReview() {
+    if(this.totalItems() > 0) {
+      let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+      swiper.slideTo(2)
+    } else {
+      this.toast.present('bottom', 'No hay items en el carrito')
+    }
   }
 
 
@@ -176,7 +184,6 @@ export class QrScannerPage implements OnInit {
 
   addItemToOrderList() {
     this.orderItemList.push(this.orderItem)
-    console.log('orderItemList: ', this.orderItemList)
   }
 
   clearItem() {
@@ -206,6 +213,24 @@ export class QrScannerPage implements OnInit {
         this.navCtrl.navigateRoot('/home', {animated: true}).then()
       }
     })
+  }
+
+  totalToPay(): number {
+    let total = 0
+    this.orderItemList.forEach(i => {
+      if(i.price && i.quantity)
+        total += i.price * i.quantity
+    })
+    return total
+  }
+
+  totalItems(): number {
+    let totalItems = 0
+    this.orderItemList.forEach(i => {
+      if(i.quantity != undefined)
+        totalItems += i.quantity
+    })
+    return totalItems
   }
 
   protected readonly stop = stop;

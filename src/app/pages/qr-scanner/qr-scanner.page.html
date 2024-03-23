@@ -16,9 +16,11 @@
 <!--  </ion-button>-->
 
   <swiper-container #swiper>
+    <!-- SLIDE 1 Qr Scanner -->
     <swiper-slide>
     </swiper-slide>
 
+    <!-- SLIDE 2 Menú -->
     <swiper-slide>
       <ion-card-content class="banner">
         <ion-card-subtitle class="subtitle">{{menuResponse.header}}</ion-card-subtitle>
@@ -56,11 +58,74 @@
 
             </ion-row>
 
-            <ion-button slot="end" color="warning" (click)="goToOrderPreview()"/>
 
           </ion-grid>
 
         </ion-item-group>
+        <ion-col>
+          <ion-row class="row">
+            <ion-card-subtitle>Cantidad de items seleccionados: {{totalItems()}}</ion-card-subtitle>
+          </ion-row>
+        </ion-col>
+        <ion-row class="buttons">
+          <ion-col>
+            <ion-button (click)="goToReview()" color="warning"
+                        shape="round">
+              Ver pedido
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-list>
+
+    </swiper-slide>
+
+    <!-- SLIDE 3 Menu Review-->
+    <swiper-slide>
+
+
+      <ion-list class="contenedor">
+        <ion-item-group>
+
+          <ion-grid [fixed]="true">
+
+
+            <ion-row class="row-category" *ngFor="let item of orderItemList">
+              <ion-col size="12" class="left-item-column">
+                <ion-row>
+                  <ion-card-title>{{item.name}}</ion-card-title>
+                </ion-row>
+                <ion-row>
+                  <ion-card-subtitle>{{item.description}}</ion-card-subtitle>
+                </ion-row>
+                <ion-row>
+                  <ion-card-subtitle>$ {{item.price}}</ion-card-subtitle>
+                </ion-row>
+                <ion-row>
+                  <ion-card-subtitle>$ {{item.additionalComments}}</ion-card-subtitle>
+                </ion-row>
+                <ion-row>
+                  <ion-card-subtitle>cantidad: {{item.quantity}}</ion-card-subtitle>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+
+        </ion-item-group>
+        <ion-col>
+          <ion-row class="row">
+            <ion-card-subtitle>Total: ${{totalToPay()}}</ion-card-subtitle>
+          </ion-row>
+        </ion-col>
+
+        <ion-row class="buttons">
+          <ion-col>
+            <ion-button  color="warning"
+                        shape="round">
+              Confirmar
+            </ion-button>
+          </ion-col>
+        </ion-row>
       </ion-list>
 
     </swiper-slide>
