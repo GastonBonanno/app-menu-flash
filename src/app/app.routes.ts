@@ -18,11 +18,6 @@ export const routes: Routes = [
     canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },
   {
-    path: 'menu',
-    loadComponent: () => import('./pages/menu/menu.page').then( m => m.MenuPage),
-    canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
-  },
-  {
     path: 'profile',
     loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage),
     canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
@@ -35,11 +30,6 @@ export const routes: Routes = [
   {
     path: 'scanQr',
     loadComponent: () => import('./pages/qr-scanner/qr-scanner.page').then( m => m.QrScannerPage),
-    canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
-  },
-  {
-    path: 'orderPreview',
-    loadComponent: () => import('./pages/order-preview/order-preview.page').then( m => m.OrderPreviewPage),
     canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },
   {

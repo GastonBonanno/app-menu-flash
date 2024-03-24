@@ -25,9 +25,16 @@ export interface ClientOrderItemResponse{
 }
 
 export interface OrderItem {
-  name: string | undefined;
+  itemName: string | undefined;
   description: string | undefined;
   price: number | undefined;
   quantity: number | undefined;
   additionalComments: string | undefined;
+  itemMenuId: number | undefined;
+}
+
+export interface CreateClientOrder{
+  tableName: string | undefined;
+  companyMenuId: number | undefined;
+  clientOrderItemDto: OrderItem[];
 }

@@ -10,8 +10,9 @@ import {Toast} from "../../utils/toast";
 import Swiper from "swiper";
 import {register} from "swiper/element/bundle";
 import {ItemMenuResponse, MenuResponse} from "../../interfaces/menu.interface";
-import {OrderItem} from "../../interfaces/order.interface";
+import {ClientOrderResponse, CreateClientOrder, OrderItem} from "../../interfaces/order.interface";
 import {MenuService} from "../../services/menu.service";
+import {OrderService} from "../../services/order.service";
 register()
 
 @Component({
@@ -46,15 +47,20 @@ export class QrScannerPage implements OnInit {
   };
 
   orderItem: OrderItem = {
-    name: undefined,
+    itemName: undefined,
     description: undefined,
     price: undefined,
     quantity: undefined,
     additionalComments: undefined,
+    itemMenuId: undefined,
   }
   isModalItemOpen: boolean = false
   orderItemList: OrderItem[] = []
   menuId: string | undefined = undefined
+
+  clientOrderResponse: ClientOrderResponse | undefined = undefined
+
+  qrString: string | undefined = undefined
 
 
   constructor(
@@ -63,7 +69,7 @@ export class QrScannerPage implements OnInit {
     private router: Router,
     private toast: Toast,
     private menuService: MenuService,
-    private activatedRoute: ActivatedRoute
+    private orderService: OrderService,
   ) { }
 
   async ngOnInit() {
@@ -79,12 +85,13 @@ export class QrScannerPage implements OnInit {
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      // this.scanResult = await BarcodeScanner.startScan();
-      // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
-      // if (this.scanResult.hasContent) {
-        this.menuId = '1'
+      this.scanResult = await BarcodeScanner.startScan();
+      this.toast.present('bottom', `Result: ${this.scanResult.content}`)
+      if (this.scanResult.hasContent) {
+        this.qrString = this.scanResult?.content
+        this.menuId = this.formatResultMenuId()
         document.querySelector('body')?.classList.remove('scanner-active');
-      // }
+      }
       this.isScanActive = false;
     } catch (e) {
       console.log('Error: ', e)
@@ -94,8 +101,12 @@ export class QrScannerPage implements OnInit {
     this.findMenu()
   }
 
-  formatResultMenuId(qrResult: string): string {
-    return qrResult.split(',')[0]
+  formatResultMenuId(): string | undefined{
+    return this.qrString?.split(',')[0]
+  }
+
+  formatResultTableName(): string | undefined {
+    return this.qrString?.split(',')[1]
   }
 
 
@@ -147,35 +158,75 @@ export class QrScannerPage implements OnInit {
       this.orderItem.quantity = this.orderItem.quantity! - 1
   }
 
-  goToNextSlide() {
-    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
-    swiper.slideNext()
-  }
-
   goToMenu() {
     let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.allowTouchMove = false
+    swiper.on("slideChange", () => this.scrollToTop())
     swiper.slideTo(1)
   }
 
-  goToReview() {
+  goToPreview() {
     if(this.totalItems() > 0) {
       let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+      swiper.allowTouchMove = false
+      swiper.on('slideChange', () => this.scrollToTop())
       swiper.slideTo(2)
     } else {
       this.toast.present('bottom', 'No hay items en el carrito')
     }
   }
 
+  goToMercadoPago() {
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.allowTouchMove = false
+    swiper.on('slideChange', () => this.scrollToTop())
+    swiper.slideTo(3)
+  }
+
+  goToAfterPayment() {
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.allowTouchMove = false
+    swiper.on('slideChange', () => this.scrollToTop())
+    swiper.slideTo(4)
+  }
+
+  createOrder() {
+    let idString: string | undefined = this.formatResultMenuId();
+    let id: number = (idString != undefined ) ? +idString : 0;
+    let createClientOrder: CreateClientOrder = {
+      tableName: this.formatResultTableName(),
+      companyMenuId: id,
+      clientOrderItemDto: this.orderItemList
+    }
+    this.orderService.createOrder(createClientOrder).subscribe({
+      next: (resp: ClientOrderResponse) => {
+        if(resp !== null) {
+          this.clientOrderResponse = resp
+          this.goToAfterPayment()
+        } else {
+          console.log('Error al crear orden');
+          this.toast.present('bottom', 'Error al crear orden')
+          this.navCtrl.navigateRoot('/home', {animated: true}).then()
+        }
+      },
+      error: (err) => {
+        console.log('Error al crear orden', err);
+        this.toast.present('bottom', 'Error al crear orden')
+        this.navCtrl.navigateRoot('/home', {animated: true}).then()
+      }
+    })
+  }
 
   setOpenModalItem(isOpen: boolean, item: ItemMenuResponse | undefined) {
     if(isOpen && item !== undefined) {
       this.isModalItemOpen = true
       this.orderItem = {
-        name: item.name,
+        itemName: item.name,
         description: item.description,
         price: item.price,
         quantity: 1,
         additionalComments: undefined,
+        itemMenuId: item.id
       }
     } else {
       this.isModalItemOpen = false
@@ -188,11 +239,12 @@ export class QrScannerPage implements OnInit {
 
   clearItem() {
     this.orderItem = {
-      name: undefined,
+      itemName: undefined,
       description: undefined,
       price: undefined,
       quantity: undefined,
       additionalComments: undefined,
+      itemMenuId: undefined,
     }
   }
 
@@ -233,5 +285,25 @@ export class QrScannerPage implements OnInit {
     return totalItems
   }
 
+  removeItem(item: OrderItem) {
+    const index = this.orderItemList.indexOf(item, 0);
+    if (index > -1) {
+      this.orderItemList.splice(index, 1);
+    }
+    if(this.orderItemList.length <= 0) {
+      this.goToMenu()
+    }
+  }
+
+  goHome() {
+    this.navCtrl.navigateRoot('/home', {animated: true}).then()
+  }
+
+  scrollToTop() {
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
+    // window.scrollTo(0, 0);
+  }
+
   protected readonly stop = stop;
+  protected readonly undefined = undefined;
 }

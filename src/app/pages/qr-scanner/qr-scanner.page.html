@@ -3,17 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>QrScanner</ion-title>
+    <ion-title>Menu Flash</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<!--<ion-content [style.&#45;&#45;backgroud]="isScanActive ? '#00000000' : '#fff'">-->
 <ion-content class="{{isScanActive ? 'active-camera' : ''}}">
-
-<!--  <ion-button expand="full" (click)="startScanner()" *ngIf="!isScanActive">-->
-<!--    <ion-icon name="scan" slot="start"></ion-icon>-->
-<!--    Start Scan-->
-<!--  </ion-button>-->
 
   <swiper-container #swiper>
     <!-- SLIDE 1 Qr Scanner -->
@@ -69,7 +63,7 @@
         </ion-col>
         <ion-row class="buttons">
           <ion-col>
-            <ion-button (click)="goToReview()" color="warning"
+            <ion-button (click)="goToPreview()" color="warning"
                         shape="round">
               Ver pedido
             </ion-button>
@@ -79,20 +73,18 @@
 
     </swiper-slide>
 
-    <!-- SLIDE 3 Menu Review-->
+    <!-- SLIDE 3 Menu Preview-->
     <swiper-slide>
-
-
       <ion-list class="contenedor">
         <ion-item-group>
 
           <ion-grid [fixed]="true">
 
 
-            <ion-row class="row-category" *ngFor="let item of orderItemList">
-              <ion-col size="12" class="left-item-column">
+            <ion-row *ngFor="let item of orderItemList">
+              <ion-col size="9">
                 <ion-row>
-                  <ion-card-title>{{item.name}}</ion-card-title>
+                  <ion-card-title>{{item.itemName}}</ion-card-title>
                 </ion-row>
                 <ion-row>
                   <ion-card-subtitle>{{item.description}}</ion-card-subtitle>
@@ -101,11 +93,20 @@
                   <ion-card-subtitle>$ {{item.price}}</ion-card-subtitle>
                 </ion-row>
                 <ion-row>
-                  <ion-card-subtitle>$ {{item.additionalComments}}</ion-card-subtitle>
+                  <ion-card-subtitle>{{item.additionalComments}}</ion-card-subtitle>
                 </ion-row>
                 <ion-row>
                   <ion-card-subtitle>cantidad: {{item.quantity}}</ion-card-subtitle>
                 </ion-row>
+              </ion-col>
+              <ion-col size="3">
+                <ion-toolbar>
+                <ion-fab (click)="removeItem(item)" slot="end" horizontal="end">
+                  <ion-fab-button color="medium" size="small">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab>
+                </ion-toolbar>
               </ion-col>
             </ion-row>
 
@@ -120,15 +121,52 @@
 
         <ion-row class="buttons">
           <ion-col>
-            <ion-button  color="warning"
+            <ion-button (click)="goToMenu()"
+                        color="warning"
                         shape="round">
-              Confirmar
+              Volver al menú
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="goToMercadoPago()"
+                        color="warning"
+                        shape="round">
+              Pagar
             </ion-button>
           </ion-col>
         </ion-row>
       </ion-list>
 
     </swiper-slide>
+
+    <!-- Slide Mercado Pago-->
+    <swiper-slide>
+      <ion-row class="buttons">
+        <ion-col>
+          <ion-button (click)="createOrder()"
+                      color="warning"
+                      shape="round">
+            Confirmar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </swiper-slide>
+
+    <!-- Slide Pedido en curso-->
+    <swiper-slide>
+      <ion-text class="buttons">Su número de pedido es:</ion-text>
+      <ion-title class="buttons">{{clientOrderResponse?.orderId}}</ion-title>
+      <ion-row class="buttons">
+        <ion-col>
+          <ion-button (click)="goHome()"
+                      color="warning"
+                      shape="round">
+            Volver al home
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </swiper-slide>
+
   </swiper-container>
 
 
@@ -157,7 +195,7 @@
                 <ion-title>Nombre</ion-title>
               </ion-item-divider>
               <ion-row style="margin-top: 10px">
-                <ion-text>{{orderItem.name}}</ion-text>
+                <ion-text>{{orderItem.itemName}}</ion-text>
               </ion-row>
             </ion-row>
 
