@@ -1,5 +1,5 @@
 <ion-header [hidden]="isScanActive">
-  <ion-toolbar color="primary">
+  <ion-toolbar color="warning">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
@@ -128,10 +128,10 @@
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button (click)="goToMercadoPago()"
+            <ion-button (click)="goToMercadopago()"
                         color="warning"
                         shape="round">
-              Pagar
+              Finalizar compra
             </ion-button>
           </ion-col>
         </ion-row>
@@ -139,17 +139,33 @@
 
     </swiper-slide>
 
-    <!-- Slide Mercado Pago-->
+    <!-- Slide Mercadopago-->
     <swiper-slide>
+      <ion-title>Medios de pago</ion-title>
+
+      <div id="wallet_container"></div>
+
+<!--      <ion-row class="buttons">-->
+<!--        <ion-col>-->
+<!--          <ion-button (click)="createOrder()"-->
+<!--                      color="warning"-->
+<!--                      shape="round">-->
+<!--            Comprar-->
+<!--          </ion-button>-->
+<!--        </ion-col>-->
+<!--      </ion-row>-->
+
       <ion-row class="buttons">
         <ion-col>
-          <ion-button (click)="createOrder()"
+          <ion-button (click)="goToMenu()"
                       color="warning"
                       shape="round">
-            Confirmar
+            Volver al menú
           </ion-button>
         </ion-col>
       </ion-row>
+
+
     </swiper-slide>
 
     <!-- Slide Pedido en curso-->

@@ -1,9 +1,16 @@
+<ion-header>
+  <ion-toolbar color="warning">
+      <ion-fab (click)="logout()" slot="end" horizontal="end">
+        <ion-fab-button color="light" size="small">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    <ion-title>Bienvenido a Menu Flash</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content>
+<ion-content class="ion-padding" [fullscreen]="true" color="dark">
   <ion-grid class="ion-padding">
-    <ion-row class="ion-padding">
-      <ion-title class="ion-padding">Bienvenido</ion-title>
-    </ion-row>
 
   <ion-row class="buttons">
     <ion-col>

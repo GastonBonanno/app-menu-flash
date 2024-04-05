@@ -13,6 +13,21 @@ import {ItemMenuResponse, MenuResponse} from "../../interfaces/menu.interface";
 import {ClientOrderResponse, CreateClientOrder, OrderItem} from "../../interfaces/order.interface";
 import {MenuService} from "../../services/menu.service";
 import {OrderService} from "../../services/order.service";
+import {MercadopagoService} from "../../services/mercadopago.service";
+import {Preference} from "../../interfaces/mercadopago.interface";
+// import {MercadoPagoConfig, Payment} from 'mercadopago';
+// import {PreferenceCreateData} from "mercadopago/dist/clients/preference/create/types";
+// import MercadoPagoConfig from 'mercadopago'
+// import * as MercadoPago from 'mercadopago';
+// import {MercadoPagoConfig, Payment, Preference} from 'mercadopago';
+// import {PreferenceCreateData} from "mercadopago/dist/clients/preference/create/types";
+// import {MercadoPagoConfig, Payment, Preference, MerchantOrder} from "mercadopago";
+// import {
+//   Collector,
+//   MerchantOrderItemRequest,
+//   MerchantOrderPayerRequest
+// } from "mercadopago/dist/clients/merchantOrder/commonTypes";
+
 register()
 
 @Component({
@@ -61,7 +76,8 @@ export class QrScannerPage implements OnInit {
   clientOrderResponse: ClientOrderResponse | undefined = undefined
 
   qrString: string | undefined = undefined
-
+  mercadopago: any
+  brickController: any = undefined
 
   constructor(
     private alertController: AlertController,
@@ -70,28 +86,36 @@ export class QrScannerPage implements OnInit {
     private toast: Toast,
     private menuService: MenuService,
     private orderService: OrderService,
+    private mercadopagoService: MercadopagoService,
   ) { }
 
   async ngOnInit() {
+    // let client = new MercadoPagoConfig({accessToken: 'access_token', options: {timeout: 5000, idempotencyKey: 'abc'}});
+    // this.payment = new Payment(client)
+    // @ts-ignore
+    this.mercadopago = new MercadoPago('TEST-300bd4a1-8683-426b-9a36-c00fe4a31829', {
+      locale: 'es-AR'
+    });
     await this.startScan()
   }
 
   async startScan() {
     try {
-      const allowed = await this.checkPermission();
-      if (!allowed) {
-        return
-      }
+      // const allowed = await this.checkPermission();
+      // if (!allowed) {
+      //   return
+      // }
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      this.scanResult = await BarcodeScanner.startScan();
-      this.toast.present('bottom', `Result: ${this.scanResult.content}`)
-      if (this.scanResult.hasContent) {
-        this.qrString = this.scanResult?.content
+      // this.scanResult = await BarcodeScanner.startScan();
+      // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
+      // if (this.scanResult.hasContent) {
+      //   this.qrString = this.scanResult?.content
+        this.qrString = '1,mesa4'
         this.menuId = this.formatResultMenuId()
         document.querySelector('body')?.classList.remove('scanner-active');
-      }
+      // }
       this.isScanActive = false;
     } catch (e) {
       console.log('Error: ', e)
@@ -159,6 +183,7 @@ export class QrScannerPage implements OnInit {
   }
 
   goToMenu() {
+    // controller.unmount()
     let swiper: Swiper = this.swiperRef?.nativeElement.swiper
     swiper.allowTouchMove = false
     swiper.on("slideChange", () => this.scrollToTop())
@@ -176,18 +201,37 @@ export class QrScannerPage implements OnInit {
     }
   }
 
-  goToMercadoPago() {
-    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
-    swiper.allowTouchMove = false
-    swiper.on('slideChange', () => this.scrollToTop())
-    swiper.slideTo(3)
-  }
+  createMercadopagoButton() {
+    this.mercadopagoService.createPreference().subscribe({
+      next: (resp: Preference) => {
+        if(resp !== null) {
+          console.log('resp::', resp)
 
-  goToAfterPayment() {
-    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
-    swiper.allowTouchMove = false
-    swiper.on('slideChange', () => this.scrollToTop())
-    swiper.slideTo(4)
+          this.mercadopago.bricks().create("wallet", "wallet_container", {
+            initialization: {
+              preferenceId: resp.id,
+            },
+            customization: {
+              texts: {
+                valueProp: 'smart_option',
+              },
+            },
+          });
+          // this.createOrder()
+          this.mercadopago.bricks().unwind
+
+        } else {
+          console.log('Error en el pago');
+          this.toast.present('bottom', 'Error en el pago')
+          this.navCtrl.navigateRoot('/home', {animated: true}).then()
+        }
+      },
+      error: (err) => {
+        console.log('Error al crear orden', err);
+        this.toast.present('bottom', 'Error al crear orden')
+        this.navCtrl.navigateRoot('/home', {animated: true}).then()
+      }
+    })
   }
 
   createOrder() {
@@ -198,6 +242,7 @@ export class QrScannerPage implements OnInit {
       companyMenuId: id,
       clientOrderItemDto: this.orderItemList
     }
+
     this.orderService.createOrder(createClientOrder).subscribe({
       next: (resp: ClientOrderResponse) => {
         if(resp !== null) {
@@ -215,6 +260,21 @@ export class QrScannerPage implements OnInit {
         this.navCtrl.navigateRoot('/home', {animated: true}).then()
       }
     })
+  }
+
+  goToAfterPayment() {
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.allowTouchMove = false
+    swiper.on('slideChange', () => this.scrollToTop())
+    swiper.slideTo(4)
+  }
+
+  goToMercadopago() {
+    this.createMercadopagoButton()
+    let swiper: Swiper = this.swiperRef?.nativeElement.swiper
+    swiper.allowTouchMove = false
+    swiper.on('slideChange', () => this.scrollToTop())
+    swiper.slideTo(3)
   }
 
   setOpenModalItem(isOpen: boolean, item: ItemMenuResponse | undefined) {

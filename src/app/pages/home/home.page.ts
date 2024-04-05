@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import {IonicModule, NavController} from '@ionic/angular';
 
 import {Toast} from "../../utils/toast";
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,7 @@ import {Toast} from "../../utils/toast";
 export class HomePage {
   datetime: any;
 
-  constructor(private navCtrl: NavController) {
+  constructor(private navCtrl: NavController, private tokenService: TokenService) {
   }
 
   openProfile(){
@@ -28,6 +29,10 @@ export class HomePage {
 
   openMyOrders(){
     this.navCtrl.navigateRoot('/orders', {animated: true}).then()
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot('/login', {animated: true}).then()
   }
 
 }
