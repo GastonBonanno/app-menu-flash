@@ -15,19 +15,6 @@ import {MenuService} from "../../services/menu.service";
 import {OrderService} from "../../services/order.service";
 import {MercadopagoService} from "../../services/mercadopago.service";
 import {Preference} from "../../interfaces/mercadopago.interface";
-// import {MercadoPagoConfig, Payment} from 'mercadopago';
-// import {PreferenceCreateData} from "mercadopago/dist/clients/preference/create/types";
-// import MercadoPagoConfig from 'mercadopago'
-// import * as MercadoPago from 'mercadopago';
-// import {MercadoPagoConfig, Payment, Preference} from 'mercadopago';
-// import {PreferenceCreateData} from "mercadopago/dist/clients/preference/create/types";
-// import {MercadoPagoConfig, Payment, Preference, MerchantOrder} from "mercadopago";
-// import {
-//   Collector,
-//   MerchantOrderItemRequest,
-//   MerchantOrderPayerRequest
-// } from "mercadopago/dist/clients/merchantOrder/commonTypes";
-
 register()
 
 @Component({
@@ -77,7 +64,7 @@ export class QrScannerPage implements OnInit {
 
   qrString: string | undefined = undefined
   mercadopago: any
-  brickController: any = undefined
+  mercadopagoController: any = undefined
 
   constructor(
     private alertController: AlertController,
@@ -90,8 +77,6 @@ export class QrScannerPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // let client = new MercadoPagoConfig({accessToken: 'access_token', options: {timeout: 5000, idempotencyKey: 'abc'}});
-    // this.payment = new Payment(client)
     // @ts-ignore
     this.mercadopago = new MercadoPago('TEST-300bd4a1-8683-426b-9a36-c00fe4a31829', {
       locale: 'es-AR'
@@ -183,7 +168,6 @@ export class QrScannerPage implements OnInit {
   }
 
   goToMenu() {
-    // controller.unmount()
     let swiper: Swiper = this.swiperRef?.nativeElement.swiper
     swiper.allowTouchMove = false
     swiper.on("slideChange", () => this.scrollToTop())
@@ -203,11 +187,14 @@ export class QrScannerPage implements OnInit {
 
   createMercadopagoButton() {
     this.mercadopagoService.createPreference().subscribe({
-      next: (resp: Preference) => {
-        if(resp !== null) {
+      next: async (resp: Preference) => {
+        if (resp !== null) {
           console.log('resp::', resp)
 
-          this.mercadopago.bricks().create("wallet", "wallet_container", {
+          if(this.mercadopagoController)
+            this.mercadopagoController.unmount()
+
+          this.mercadopagoController = await this.mercadopago.bricks().create("wallet", "wallet_container", {
             initialization: {
               preferenceId: resp.id,
             },
@@ -217,8 +204,6 @@ export class QrScannerPage implements OnInit {
               },
             },
           });
-          // this.createOrder()
-          this.mercadopago.bricks().unwind
 
         } else {
           console.log('Error en el pago');
