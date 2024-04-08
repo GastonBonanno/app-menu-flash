@@ -14,7 +14,9 @@ import {ClientOrderResponse, CreateClientOrder, OrderItem} from "../../interface
 import {MenuService} from "../../services/menu.service";
 import {OrderService} from "../../services/order.service";
 import {MercadopagoService} from "../../services/mercadopago.service";
-import {Preference} from "../../interfaces/mercadopago.interface";
+import {Item, Preference} from "../../interfaces/mercadopago.interface";
+import {UserService} from "../../services/user.service";
+import {ProfileData} from "../../interfaces/user.interface";
 register()
 
 @Component({
@@ -74,33 +76,47 @@ export class QrScannerPage implements OnInit {
     private menuService: MenuService,
     private orderService: OrderService,
     private mercadopagoService: MercadopagoService,
+    private userService: UserService,
   ) { }
 
   async ngOnInit() {
-    // @ts-ignore
-    this.mercadopago = new MercadoPago('TEST-300bd4a1-8683-426b-9a36-c00fe4a31829', {
-      locale: 'es-AR'
-    });
     await this.startScan()
+    let companyData = await this.userService.getCompanyDataById(this.formatResultCompanyId()).subscribe({
+      next: (resp: ProfileData) => {
+        if (!resp.publicKey) {
+          this.toast.present('bottom', 'Es necesario configurar el public key en el perfil web')
+          this.navCtrl.navigateRoot('/home', {animated: true}).then()
+        }
+
+        // @ts-ignore
+        this.mercadopago = new MercadoPago(resp.publicKey, {
+          locale: 'es-AR'
+        });
+      },
+      error: (err) => {
+        console.log('Error al obtener datos de la compañia', err);
+        this.toast.present('bottom', 'Error al obtener datos de la compañia')
+        this.navCtrl.navigateRoot('/home', {animated: true}).then()
+      }
+    })
   }
 
   async startScan() {
     try {
-      // const allowed = await this.checkPermission();
-      // if (!allowed) {
-      //   return
-      // }
+      const allowed = await this.checkPermission();
+      if (!allowed) {
+        return
+      }
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      // this.scanResult = await BarcodeScanner.startScan();
-      // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
-      // if (this.scanResult.hasContent) {
-      //   this.qrString = this.scanResult?.content
-        this.qrString = '1,mesa4'
+      this.scanResult = await BarcodeScanner.startScan();
+      this.toast.present('bottom', `Result: ${this.scanResult.content}`)
+      if (this.scanResult.hasContent) {
+        this.qrString = this.scanResult?.content
         this.menuId = this.formatResultMenuId()
         document.querySelector('body')?.classList.remove('scanner-active');
-      // }
+      }
       this.isScanActive = false;
     } catch (e) {
       console.log('Error: ', e)
@@ -110,15 +126,17 @@ export class QrScannerPage implements OnInit {
     this.findMenu()
   }
 
-  formatResultMenuId(): string | undefined{
+  formatResultCompanyId(): string | undefined{
     return this.qrString?.split(',')[0]
   }
 
-  formatResultTableName(): string | undefined {
+  formatResultMenuId(): string | undefined{
     return this.qrString?.split(',')[1]
   }
 
-
+  formatResultTableName(): string | undefined {
+    return this.qrString?.split(',')[2]
+  }
 
   async checkPermission(){
     return await new Promise(async (resolve, reject) => {
@@ -185,13 +203,46 @@ export class QrScannerPage implements OnInit {
     }
   }
 
-  createMercadopagoButton() {
-    this.mercadopagoService.createPreference().subscribe({
+  async createMercadopagoButton() {
+    let idString: string | undefined = this.formatResultMenuId();
+    let id: number = (idString != undefined) ? +idString : 0;
+    let createClientOrder: CreateClientOrder = {
+      tableName: this.formatResultTableName(),
+      companyMenuId: id,
+      clientOrderItemDto: this.orderItemList
+    }
+
+    this.orderService.createOrder(createClientOrder).subscribe({
+      next: (resp: ClientOrderResponse) => {
+        if (resp !== null) {
+          this.clientOrderResponse = resp
+          this.createPreferences(resp.id)
+        } else {
+          console.log('Error al crear orden');
+          this.toast.present('bottom', 'Error al crear orden')
+          this.navCtrl.navigateRoot('/home', {animated: true}).then()
+        }
+      },
+      error: (err) => {
+        console.log('Error al crear orden', err);
+        this.toast.present('bottom', 'Error al crear orden')
+        this.navCtrl.navigateRoot('/home', {animated: true}).then()
+      }
+    })
+  }
+
+  private createPreferences(orderId: number | undefined) {
+    let itemList: Item[] = []
+    this.orderItemList.forEach(item => {
+      itemList.push({
+        itemId: item.itemMenuId,
+        quantity: item.quantity
+      })
+    })
+    this.mercadopagoService.createPreference(itemList, this.formatResultCompanyId(), orderId).subscribe({
       next: async (resp: Preference) => {
         if (resp !== null) {
-          console.log('resp::', resp)
-
-          if(this.mercadopagoController)
+          if (this.mercadopagoController)
             this.mercadopagoController.unmount()
 
           this.mercadopagoController = await this.mercadopago.bricks().create("wallet", "wallet_container", {
@@ -208,34 +259,6 @@ export class QrScannerPage implements OnInit {
         } else {
           console.log('Error en el pago');
           this.toast.present('bottom', 'Error en el pago')
-          this.navCtrl.navigateRoot('/home', {animated: true}).then()
-        }
-      },
-      error: (err) => {
-        console.log('Error al crear orden', err);
-        this.toast.present('bottom', 'Error al crear orden')
-        this.navCtrl.navigateRoot('/home', {animated: true}).then()
-      }
-    })
-  }
-
-  createOrder() {
-    let idString: string | undefined = this.formatResultMenuId();
-    let id: number = (idString != undefined ) ? +idString : 0;
-    let createClientOrder: CreateClientOrder = {
-      tableName: this.formatResultTableName(),
-      companyMenuId: id,
-      clientOrderItemDto: this.orderItemList
-    }
-
-    this.orderService.createOrder(createClientOrder).subscribe({
-      next: (resp: ClientOrderResponse) => {
-        if(resp !== null) {
-          this.clientOrderResponse = resp
-          this.goToAfterPayment()
-        } else {
-          console.log('Error al crear orden');
-          this.toast.present('bottom', 'Error al crear orden')
           this.navCtrl.navigateRoot('/home', {animated: true}).then()
         }
       },

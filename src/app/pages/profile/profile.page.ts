@@ -25,6 +25,8 @@ export class ProfilePage implements OnInit {
     cuit: undefined,
     address: undefined,
     phoneNumber: undefined,
+    publicKey: undefined,
+    accessToken: undefined
   };
 
   constructor(private userService: UserService, private toast: Toast) { }

@@ -22,4 +22,9 @@ export class OrderService {
     return this.secureService.post( `/order`, clientOrder)
   }
 
+  activateOrder(orderId: string): Observable<ClientOrderResponse> {
+    let params: HttpParams = new HttpParams({ fromObject: { active: true } });
+    return this.secureService.put( `/order/active/${orderId}`, params)
+  }
+
 }

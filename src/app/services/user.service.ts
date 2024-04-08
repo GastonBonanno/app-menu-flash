@@ -38,6 +38,10 @@ export class UserService {
     return this.secureService.get('/user/company-data');
   }
 
+  getCompanyDataById(id: string | undefined): Observable<ProfileData> {
+    return this.secureService.get(`/user/company-data-by-id?companyId=${id}`);
+  }
+
   updateCompanyData(profileData: ProfileData): Observable<ProfileData>{
     return this.secureService.patch('/user/company-data',profileData);
   }

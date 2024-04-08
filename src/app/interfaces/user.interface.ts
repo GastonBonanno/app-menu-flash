@@ -37,5 +37,7 @@ export interface ProfileData {
   cuit: string | undefined;
   address: string | undefined;
   phoneNumber: string | undefined;
+  publicKey: string | undefined;
+  accessToken: string | undefined;
 }
 
