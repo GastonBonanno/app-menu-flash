@@ -61,3 +61,18 @@ body.scanner-active {
   --background: transparent;
   --ion-background-color: transparent;
 }
+
+ion-title {
+  color: #1e1e1e;
+}
+
+.form ion-list {
+  border-radius: 20px;
+  border-width: 2px;
+  border: 2px solid #ffc409;
+  box-shadow: 0 4px 10px rgba(255, 255, 0, 0.5);
+}
+
+.ion-color-dark{
+  --ion-color-base: #1e1e1e !important;
+}

@@ -1,5 +1,3 @@
-import {StateResponse} from "./state.interface";
-
 export interface MenuResponse {
   id: number;
   branch: string
