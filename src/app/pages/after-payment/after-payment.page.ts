@@ -4,7 +4,7 @@ import {OrderService} from "../../services/order.service";
 import {IonicModule} from "@ionic/angular";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {ClientOrderResponse} from "../../interfaces/order.interface";
+import {ClientOrderResponse, OrderItem} from "../../interfaces/order.interface";
 import {Observable} from "rxjs";
 
 @Component({
@@ -44,5 +44,4 @@ export class AfterPaymentPage implements OnInit {
   private activateOrder(orderId: string): Observable<ClientOrderResponse> {
       return this.orderService.activateOrder(orderId)
   }
-
 }

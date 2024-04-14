@@ -107,8 +107,8 @@ export class QrScannerPage implements OnInit {
       // if (!allowed) {
       //   return
       // }
-      // await BarcodeScanner.showBackground()
-      // document.querySelector('body')?.classList.add('scanner-active');
+      await BarcodeScanner.showBackground()
+      document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
       // this.scanResult = await BarcodeScanner.startScan();
       // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
@@ -116,7 +116,7 @@ export class QrScannerPage implements OnInit {
       //   this.qrString = this.scanResult?.content
         this.qrString = "1,1,patio1"
         this.menuId = this.formatResultMenuId()
-      //   document.querySelector('body')?.classList.remove('scanner-active');
+        document.querySelector('body')?.classList.remove('scanner-active');
       // }
       this.isScanActive = false;
     } catch (e) {

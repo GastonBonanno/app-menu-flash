@@ -1,4 +1,4 @@
-.scanner-buttons{
+.scanner-buttons {
   margin: 0px;
   position: absolute;
   bottom: 100px;
@@ -35,12 +35,43 @@ ion-row {
   height: auto;
 }
 
-.row{
+.row {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
+
 .buttons {
   text-align: center;
+}
+
+ion-title > div {
+  color: #ffd534;
+}
+
+ion-card-title {
+  color: #ffd534;
+}
+
+ion-card-subtitle {
+  color: white;
+}
+
+.title-gold {
+  background-color: gold !important;
+}
+
+.toolbar-color {
+  --ion-toolbar-background: #ffd534 !important;
+}
+
+ion-item-divider {
+  --ion-color-base: #ffd534 !important;
+}
+.grey-back{
+  background-color: #1e1e1e !important;
+}
+.pad{
+  padding: 10px;
 }

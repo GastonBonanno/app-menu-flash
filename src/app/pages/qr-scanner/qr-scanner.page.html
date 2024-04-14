@@ -29,7 +29,7 @@
 
 
             <ion-row class="row-category" *ngFor="let category of menuResponse.listCategory">
-              <ion-item-divider color="dark">
+              <ion-item-divider color="dark" class="title-gold">
                 <ion-title class="title-category"> {{category.name}}</ion-title>
               </ion-item-divider>
 
@@ -101,8 +101,8 @@
               </ion-col>
               <ion-col size="3">
                 <ion-toolbar>
-                <ion-fab (click)="removeItem(item)" slot="end" horizontal="end">
-                  <ion-fab-button color="medium" size="small">
+                <ion-fab color="white" (click)="removeItem(item)" slot="end" horizontal="end">
+                  <ion-fab-button color="warning" size="small">
                     <ion-icon name="close-outline"></ion-icon>
                   </ion-fab-button>
                 </ion-fab>
@@ -141,8 +141,9 @@
 
     <!-- Slide Mercadopago-->
     <swiper-slide>
-      <ion-title>Medios de pago</ion-title>
-
+      <ion-row class="pad">
+      <ion-title class="title-gold pad">Medios de pago</ion-title>
+      </ion-row>
       <div id="wallet_container"></div>
 
       <ion-row class="buttons">
@@ -158,21 +159,6 @@
 
     </swiper-slide>
 
-    <!-- Slide Pedido en curso-->
-    <swiper-slide>
-      <ion-text class="buttons">Su número de pedido es:</ion-text>
-      <ion-title class="buttons">{{clientOrderResponse?.orderId}}</ion-title>
-      <ion-row class="buttons">
-        <ion-col>
-          <ion-button (click)="goHome()"
-                      color="warning"
-                      shape="round">
-            Volver al home
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </swiper-slide>
-
   </swiper-container>
 
 
@@ -182,7 +168,7 @@
              [backdropDismiss]="false">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar class="toolbar-color">
           <ion-title>Ítems del Menú</ion-title>
           <ion-fab (click)="setOpenModalItem(false,undefined); clearItem();" slot="end" horizontal="end">
             <ion-fab-button color="medium" size="small">
@@ -193,7 +179,7 @@
       </ion-header>
       <ion-content class="ion-padding">
 
-        <ion-grid>
+        <ion-grid class="grey-back">
           <ion-col>
 
             <ion-row>
@@ -219,23 +205,23 @@
                 <ion-title>Precio</ion-title>
               </ion-item-divider>
               <ion-row style="margin-top: 10px">
-                <ion-text>{{orderItem.price}}</ion-text>
+                <ion-text>{{"$ "+orderItem.price}}</ion-text>
               </ion-row>
             </ion-row>
 
 
-            <ion-row style="margin-top: 20px">
+            <ion-row style="margin-top: 20px; display: flex; justify-content: center; align-items: center;">
 
               <ion-col>
                 <ion-item-divider color="dark">
                   <ion-text>Cantidad:</ion-text>
                 </ion-item-divider>
               </ion-col>
-              <ion-col>
+              <ion-col style="display: flex; justify-content: center; align-items: center;">
                 <ion-button (click)="removeOneOrderQuantity()" color="medium" size="small">
                   <ion-icon name="remove-outline"></ion-icon>
                 </ion-button>
-                <ion-text>{{orderItem.quantity}}</ion-text>
+                <ion-text style="margin: 0 10px;">{{orderItem.quantity}}</ion-text>
                 <ion-button (click)="addOneOrderQuantity()"  color="medium" size="small">
                   <ion-icon name="add-outline"></ion-icon>
                 </ion-button>
@@ -251,9 +237,9 @@
         </ion-grid>
       </ion-content>
       <ion-footer>
-        <ion-toolbar>
+        <ion-toolbar class="toolbar-color">
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenModalItem(false, undefined); addItemToOrderList(); clearItem();">Guardar</ion-button>
+            <ion-button style="color: #1e1e1e" (click)="setOpenModalItem(false, undefined); addItemToOrderList(); clearItem();">Guardar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-footer>

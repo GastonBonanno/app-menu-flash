@@ -1,19 +1,20 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="dark">
+  <ion-toolbar color="warning">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+    <ion-title>Menu Flash</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content color="dark">
 
-  <ion-grid class="center">
+  <ion-grid class="center martop">
     <ion-row class="center">
-      <ion-title class="center"> Orden: </ion-title>
+      <ion-title class="center title-gold-font"> Orden: </ion-title>
     </ion-row>
     <ion-row class="center">
-      <ion-text> #{{clientOrder?.orderId}} </ion-text>
+      <ion-text class="title-gold-font"> #{{clientOrder?.orderId}} </ion-text>
     </ion-row>
   </ion-grid>
 
