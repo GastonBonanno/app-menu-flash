@@ -4,7 +4,7 @@ import {AlertController, NavController} from '@ionic/angular';
 import {IonicModule} from '@ionic/angular';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {Toast} from "../../utils/toast";
 import Swiper from "swiper";
@@ -103,21 +103,21 @@ export class QrScannerPage implements OnInit {
 
   async startScan() {
     try {
-      // const allowed = await this.checkPermission();
-      // if (!allowed) {
-      //   return
-      // }
+      const allowed = await this.checkPermission();
+      if (!allowed) {
+        return
+      }
       await BarcodeScanner.showBackground()
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
-      // this.scanResult = await BarcodeScanner.startScan();
-      // this.toast.present('bottom', `Result: ${this.scanResult.content}`)
-      // if (this.scanResult.hasContent) {
-      //   this.qrString = this.scanResult?.content
+      this.scanResult = await BarcodeScanner.startScan();
+      this.toast.present('bottom', `Result: ${this.scanResult.content}`)
+      if (this.scanResult.hasContent) {
+        this.qrString = this.scanResult?.content
         this.qrString = "1,1,patio1"
         this.menuId = this.formatResultMenuId()
         document.querySelector('body')?.classList.remove('scanner-active');
-      // }
+      }
       this.isScanActive = false;
     } catch (e) {
       console.log('Error: ', e)
