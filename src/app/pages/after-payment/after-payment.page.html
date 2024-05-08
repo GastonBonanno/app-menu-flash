@@ -19,7 +19,7 @@
   </ion-grid>
 
   <ion-grid>
-      <ion-col size="11">
+      <ion-col *ngIf="errorMessage === undefined" size="11">
         <ion-accordion-group [multiple]="true" [value]="clientOrder?.id">
           <ion-accordion value="{{clientOrder?.id}}">
             <ion-item slot="header">
@@ -30,8 +30,10 @@
             </ion-item>
           </ion-accordion>
         </ion-accordion-group>
-
       </ion-col>
+    <ion-col *ngIf="errorMessage !== undefined" size="11">
+      <ion-text>Error: {{errorMessage}}</ion-text>
+    </ion-col>
   </ion-grid>
 
 </ion-content>

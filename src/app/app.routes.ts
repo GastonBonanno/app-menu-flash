@@ -33,7 +33,7 @@ export const routes: Routes = [
     canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },
   {
-    path: 'afterPayment',
+    path: 'after-payment/:orderId/:status',
     loadComponent: () => import('./pages/after-payment/after-payment.page').then( m => m.AfterPaymentPage),
     canMatch: [(route: Route, segments: UrlSegment[])=> inject(TokenGuard).canMatch()]
   },

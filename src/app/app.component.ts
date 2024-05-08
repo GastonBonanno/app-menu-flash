@@ -23,19 +23,12 @@ export class AppComponent {
   initializeApp() {
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       this.zone.run(() => {
+        const domain = 'https://master--menuflash.netlify.app?orderId='
+        const pathArray = event.url.split(domain);
+        const orderId = pathArray[1].split('&')[0]
+        const status = pathArray[1].split('&')[1].split('status=')[1]
 
-        this.toast.present('bottom', `Listener: ${event.url}`)
-        this.navCtrl.navigateRoot('/home', {animated: true}).then()
-        // const domain = 'devdactic.com';
-        //
-        // const pathArray = event.url.split(domain);
-        // // The pathArray is now like ['https://devdactic.com', '/details/42']
-        //
-        // // Get the last element with pop()
-        // const appPath = pathArray.pop();
-        // if (appPath) {
-        //   this.router.navigateByUrl(appPath);
-        // }
+        this.navCtrl.navigateRoot(['/after-payment', orderId, status], {animated: true})
       });
     });
   }

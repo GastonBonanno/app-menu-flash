@@ -6,6 +6,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {ClientOrderResponse, OrderItem} from "../../interfaces/order.interface";
 import {Observable} from "rxjs";
+import {Toast} from "../../utils/toast";
 
 @Component({
   selector: 'app-after-payment',
@@ -18,30 +19,31 @@ import {Observable} from "rxjs";
 export class AfterPaymentPage implements OnInit {
 
   clientOrder: ClientOrderResponse | undefined = undefined
+  errorMessage: string | undefined = undefined
 
-  constructor(private route: ActivatedRoute, private orderService: OrderService,) { }
+  constructor(private route: ActivatedRoute, private orderService: OrderService) { }
 
   ngOnInit() {
-    const status = this.route.snapshot.queryParamMap.get('status');
-    const orderId = this.route.snapshot.queryParamMap.get('orderId');
-    console.log('status: ', status)
-    console.log('orderId: ', orderId)
+    const orderId = this.route.snapshot.paramMap.get('orderId');
+    const status = this.route.snapshot.paramMap.get('status');
     if(orderId && status && status === 'approved') {
       this.activateOrder(orderId).subscribe({
         next: (resp: ClientOrderResponse) => {
           this.clientOrder = resp
         },
         error: () => {
-          //Muestro error en el pago
+          this.errorMessage = "Error al activar la orden, revise el estado del pedido con el comercio"
         }
 
       })
     } else {
-      //Muestro error en el pago
+      this.errorMessage = "Error en el pago, revise el estado del pedido con el comercio"
     }
   }
 
   private activateOrder(orderId: string): Observable<ClientOrderResponse> {
       return this.orderService.activateOrder(orderId)
   }
+
+  protected readonly undefined = undefined;
 }

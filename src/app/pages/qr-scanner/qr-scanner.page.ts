@@ -111,10 +111,8 @@ export class QrScannerPage implements OnInit {
       document.querySelector('body')?.classList.add('scanner-active');
       this.isScanActive = true;
       this.scanResult = await BarcodeScanner.startScan();
-      this.toast.present('bottom', `Result: ${this.scanResult.content}`)
       if (this.scanResult.hasContent) {
         this.qrString = this.scanResult?.content
-        this.qrString = "1,1,patio1"
         this.menuId = this.formatResultMenuId()
         document.querySelector('body')?.classList.remove('scanner-active');
       }
