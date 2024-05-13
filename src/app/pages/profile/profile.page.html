@@ -14,9 +14,10 @@
 
 
       <ion-row (keydown.enter)="saveData()" class="form">
-        <ion-col size="8">
+        <ion-col size="10">
           <ion-list>
             <ion-item>
+              <ion-label color="medium">Nombre</ion-label>
               <ion-input name="name"
                          type="text"
                          placeholder="Nombre"
@@ -26,6 +27,7 @@
             </ion-item>
             <div class="error-text" *ngIf="nameError">{{ nameError }}</div>
             <ion-item>
+              <ion-label color="medium">Cuit</ion-label>
               <ion-input name="cuit"
                          type="number"
                          placeholder="Cuit"
@@ -35,6 +37,7 @@
             </ion-item>
             <div class="error-text" *ngIf="cuitError">{{ cuitError }}</div>
             <ion-item>
+              <ion-label color="medium">Dirección</ion-label>
               <ion-input name="address"
                          type="text"
                          placeholder="Dirección"
@@ -44,6 +47,7 @@
             </ion-item>
             <div class="error-text" *ngIf="addressError">{{ addressError }}</div>
             <ion-item>
+              <ion-label color="medium">Celular</ion-label>
               <ion-input name="phonenumber"
                          type="number"
                          placeholder="Teléfono"

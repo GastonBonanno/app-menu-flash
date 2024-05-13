@@ -89,7 +89,7 @@ export class LoginPage implements OnInit {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (!regex.test(this.userToCreate.password)) {
-      this.passwordError = 'Debe contener mayusculas, minusculas, numeros y al menos 8 caracteres';
+      this.passwordError = 'contraseña incorrecta';
     } else {
       this.passwordError = null;
     }

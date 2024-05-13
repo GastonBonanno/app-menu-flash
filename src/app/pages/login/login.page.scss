@@ -23,6 +23,7 @@ ion-modal#create-user-modal {
   --height: fit-content;
   --border-radius: 6px;
   --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  --ion-background-color: #1e1e1e !important ;
 }
 
 ion-modal#create-user-modal h1 {
@@ -31,4 +32,14 @@ ion-modal#create-user-modal h1 {
 
 ion-modal#create-user-modal .wrapper {
   margin-bottom: 10px;
+}
+
+.color-texto {
+  color:  #ffc409;
+}
+
+ion-input{
+  --placeholder-color: #ffc409;
+  --placeholder-opacity: 1;
+
 }

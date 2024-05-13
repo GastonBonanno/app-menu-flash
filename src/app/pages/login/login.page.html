@@ -51,7 +51,7 @@
   <ion-modal (keydown.enter)="createUser(modal)" id="create-user-modal" #modal trigger="create-user">
     <ng-template>
       <div class="wrapper">
-        <h1>Registro</h1>
+        <h1 class="color-texto">Registro</h1>
 
         <ion-list lines="none">
 
@@ -92,7 +92,7 @@
         <ion-row class="buttons">
           <ion-col>
             <ion-button (click)="createUser(modal)"
-                        color="tertiary"
+                        color="warning"
                         shape="round"
                         id="create"
                         disabled="{{!validateErrors()}}">

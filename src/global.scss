@@ -34,12 +34,11 @@ ion-header{
 }
 
 .error-text {
-  color: #cc0033;
+  color: #ff8f01;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-weight: bold;
   line-height: 20px;
-  text-shadow: 1px 1px rgba(250, 250, 250, .3);
   display: grid;
   justify-content: center;
   word-wrap: break-word;
@@ -54,6 +53,7 @@ ion-header{
 .no-error-input {
   border: 2px solid rgba(169, 169, 169, 0.5);
   outline: none;
+  color: #eae3e3;
 }
 
 //QR Scanner
