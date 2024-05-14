@@ -70,6 +70,7 @@
             <ion-input class= "{{passwordError?'error-input':'no-error-input'}}"
                        name="password"
                        type="password"
+                       helperText="Debe contener mayusculas, minusculas, numeros y al menos 8 caracteres"
                        placeholder="Contraseña"
                        [(ngModel)]="userToCreate.password"
                        (focusout)="validatePassword()"
